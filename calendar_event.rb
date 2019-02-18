@@ -4,7 +4,7 @@ class CalendarEvent
   # Calendar fields from:
   # https://support.google.com/calendar/answer/37118?hl=en
   attr_accessor(:subject, :start_date, :end_date, :all_day_event, :description, :location, :private)
-  attr_accessor(:class_category, :start_cell, :end_cell, :style)
+  attr_accessor(:class_category, :col_range, :row_range, :ref, :fill_color)
 
   def initialize(**options)
     options.each do |key, value|

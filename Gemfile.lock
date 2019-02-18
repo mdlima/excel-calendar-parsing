@@ -24,9 +24,6 @@ GEM
       byebug (~> 10.0)
       pry (~> 0.10)
     rainbow (3.0.0)
-    roo (2.8.2)
-      nokogiri (~> 1)
-      rubyzip (>= 1.2.1, < 2.0.0)
     rubocop (0.64.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
@@ -36,6 +33,9 @@ GEM
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.4.0)
     ruby-progressbar (1.10.0)
+    rubyXL (3.3.33)
+      nokogiri (>= 1.4.4)
+      rubyzip (>= 1.1.6)
     rubyzip (1.2.2)
     unicode-display_width (1.4.1)
 
@@ -46,8 +46,8 @@ DEPENDENCIES
   loofah
   pry
   pry-byebug
-  roo (~> 2.8.0)
   rubocop
+  rubyXL
 
 BUNDLED WITH
    2.0.1
