@@ -8,8 +8,10 @@ require_relative 'calendar'
 require 'pry-byebug'
 
 # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-def exec
-  workbook = RubyXL::Parser.parse('./Timetable Master Wintour UB 2019.xlsx')
+def exec(filename)
+  filename ||= './Timetable Master Wintour UB 2019.xlsx'
+  puts "Parsing #{filename}"
+  workbook = RubyXL::Parser.parse(filename)
   worksheet = workbook.worksheets.first
   puts "Found #{workbook.worksheets.length} worksheets"
 
@@ -73,13 +75,14 @@ def exec
 
         current_date = days[cell.r.first_col]
         # Find event end time
+        start_time, end_time = nil
         event_text_match = event_text.match(/\A(.+)\s+(\d+(?:h|:)\d*)\s?-\s?(\d+(?:h|:)\d*)\s*(.*)/)
         if event_text_match && event_text_match.captures.length >= 3
           event_subject = event_text_match.captures.first
           start_time, end_time = event_text_match.captures[1..2].map { |t| Time.parse(t, current_date) }
           event_location = event_text_match.captures.length > 3 && !event_text_match.captures.last.to_s.strip.empty? ? event_text_match.captures.last : nil
         else
-          puts "Event text doesn't contain time information: event #{event_text} at cell #{cell.r}"
+          # puts "Event text doesn't contain time information: event #{event_text} at cell #{cell.r}"
           # Try to estimate duration based on merged cell ranges
           cell_range = worksheet.merged_cells.filter { |mc| mc.ref.row_range.include?(cell.r.first_row) && mc.ref.col_range.include?(cell.r.first_col) }
           next if cell_range.empty?
@@ -88,6 +91,11 @@ def exec
           start_time = current_date + time
           end_time = start_time + cell_range.first.ref.row_range.size * 30.0 / 60.0 / 24.0
           event_location = nil
+        end
+
+        unless start_time
+          puts "Event time not identified: event #{event_text} at cell #{cell.r}"
+          next
         end
 
         calendar_events << CalendarEvent.new(
@@ -112,8 +120,8 @@ def exec
     num_rows += 1
   end
   puts "Parsed total #{num_rows} rows"
-  binding.pry
+  # binding.pry
 end
 
-exec
+exec ARGV.first
 # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
