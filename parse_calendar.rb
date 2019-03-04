@@ -68,7 +68,7 @@ def exec(source_file, dest_file)
       next unless cell.value && cell.value.length > 1
 
       # puts "Parsing event #{cell.value} at cell #{cell.r}"
-      event_text = Loofah.fragment(cell.value).scrub!(:prune).text
+      event_text = Loofah.fragment(cell.value).scrub!(:prune).to_text(encode_special_chars: false)
       next if event_text.to_s.strip.empty?
 
       unless days[cell.r.first_col]
