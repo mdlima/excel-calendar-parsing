@@ -8,10 +8,10 @@ require_relative 'calendar'
 require 'pry-byebug'
 
 # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-def exec(filename)
-  filename ||= './Timetable Master Wintour UB 2019.xlsx'
-  puts "Parsing #{filename}"
-  workbook = RubyXL::Parser.parse(filename)
+def exec(source_file, dest_file)
+  source_file ||= './Timetable Master Wintour UB 2019.xlsx'
+  puts "Parsing #{source_file}"
+  workbook = RubyXL::Parser.parse(source_file)
   worksheet = workbook.worksheets.first
   puts "Found #{workbook.worksheets.length} worksheets"
 
@@ -121,7 +121,9 @@ def exec(filename)
   end
   puts "Parsed total #{num_rows} rows"
   # binding.pry
+  dest_file ||= 'parsed.csv'
+  calendar_events.to_csv(dest_file)
 end
 
-exec ARGV.first
+exec ARGV[0], ARGV[1]
 # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
