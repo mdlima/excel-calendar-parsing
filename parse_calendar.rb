@@ -54,7 +54,7 @@ def exec(source_file, dest_file)
       row.each do |cell|
         next unless cell.value
 
-        days[cell.r.first_col] = DateTime.new(DateTime.now.year, cell.value.month, cell.value.day, 0, 0, 0, DateTime.now.offset)
+        days[cell.r.first_col] = DateTime.new(DateTime.now.year, cell.value.month, cell.value.day, 0, 0, 0, DateTime.now.offset).to_time
       end
       next
     end
@@ -115,13 +115,13 @@ def exec(source_file, dest_file)
       end
 
       calendar_events << CalendarEvent.new(
-        subject: event_subject,
+        subject: event_subject.strip,
         start_date: start_time,
         # start_time: start_time,
         end_date: end_time,
         # end_time: end_time,
         all_day_event: all_day_event,
-        description: event_text,
+        description: event_text.strip,
         location: event_location,
         private: false,
         class_category: class_categories[cell.fill_color],
@@ -137,6 +137,7 @@ def exec(source_file, dest_file)
   end
   puts "Parsed total #{num_rows} rows"
   # binding.pry
+  calendar_events.sort!
   dest_file ||= 'parsed.csv'
   calendar_events.to_csv(dest_file)
 end
